@@ -2,11 +2,11 @@ const express  = require( 'express' );
 
 const app = express();
 
+const userRoutes = require('./routes/userRoutes');
+
 app.use(express.json())
 
-app.get('/', (req, res)=>{
-    console.log('hi there,you got to / route');
-    res.status(200).send('you got to / route');
-});
+app.use('/api/users', userRoutes)
 
-module.exports = app
+
+module.exports = app;
