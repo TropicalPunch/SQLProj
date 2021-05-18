@@ -125,8 +125,8 @@ const getUserProfile = async (req,res)=>{
 //enables edit the specific user's data.
 const updateUserProfile = async (req,res)=>{
   
-    //in authMiddleware.js we store all user data that's passed the authentication and authorization proccess in req.user (excluding his password)
-    const user = await models.User.findOne({where: {id: req.userData.id}})// req.userData.id refers to the logged in user
+   //in authMiddleware.js we store all user data that's passed the authentication and authorization proccess in req.user (excluding his password)
+   const user = await models.User.findOne({where: {id: req.userData.id}})// req.userData.id refers to the logged in user
    
    if(user){
          user.name = req.body.name || user.name
@@ -138,26 +138,40 @@ const updateUserProfile = async (req,res)=>{
 
          }
 
-        const updatedUser = await User.update({ user }, 
-            {where: {id: req.userData.id}}
-          );
-        //generate a token with the new data! and we will send it to the user! in the response
-          const token = jwt.sign({
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            password: user.password
-            },
-            process.env.JWT_SECRET,
-            {expiresIn:'30d'}
-        ); 
+         try{
 
-         res.json({
-            id: updatedUser.id,
-            name: updatedUser.name,
-            email: updatedUser.email,
-            token: token
-         })
+             const updatedUser = await models.User.update( {
+                id: user.id,
+                name: user.name,
+                email:  user.email,
+                password: user.password
+                }, 
+                 {where: {id: req.userData.id}}
+               );
+              //generate a token with the new data! and we will send it to the user! in the response
+               const token = jwt.sign({
+                 id: user.id,
+                 name: user.name,
+                 email: user.email,
+                 password: user.password
+                 },
+                 process.env.JWT_SECRET,
+                 {expiresIn:'30d'}
+             ); 
+              //send the new data back plus the token
+               res.json({
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                password: user.password,
+                token: token
+              })
+         }catch(error){
+            res.status(500).json({
+                message: 'could not update user'
+            })
+         }
+
   
    }else{
        res.status(404).json({
