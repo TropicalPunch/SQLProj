@@ -50,7 +50,7 @@ const registerUser = (req, res)=>{
 
 //this is a POST request 
 const userLogin = (req, res)=>{
-    const {name, email, password} = req.body;
+    const { email, password } = req.body;
 
     models.User.findOne({where:{email:email }}).then(user =>{
         if(!user){
@@ -138,7 +138,7 @@ const updateUserProfile = async (req,res)=>{
 
          }
 
-         await User.update({ user }, 
+        const updatedUser = await User.update({ user }, 
             {where: {id: req.userData.id}}
           );
         //generate a token with the new data! and we will send it to the user! in the response
@@ -167,9 +167,6 @@ const updateUserProfile = async (req,res)=>{
    }
  
  }
-
-
-
 
 
 

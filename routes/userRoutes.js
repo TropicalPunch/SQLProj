@@ -4,7 +4,7 @@ const express = require ('express');
 
 const router = express.Router()// api/users/
 
-const { registerUser, userLogin} = require ('../controllers/userControllers.js'); 
+const { registerUser, userLogin, getUserProfile, updateUserProfile} = require ('../controllers/userControllers.js'); 
 const {authUser} = require('../middleware/authMiddleware.js')  //routes protecting middleware
 
 router.route('/register').post(registerUser);
